@@ -1,2 +1,9 @@
 <!--pages/home/home.wxml-->
-<text>pages/home/home.wxml</text>
+<!-- 1.展示轮播图 -->
+<swiper class='swiper'>
+  <block wx:for="{{banners}}" wx:key="{{index}}">
+    <swiper-item class='swiper-item'>
+      <image src="{{item.image}}"></image>
+    </swiper-item>
+  </block>
+</swiper>
