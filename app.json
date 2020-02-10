@@ -3,16 +3,17 @@
     "pages/home/home",
     "pages/category/category",
     "pages/cart/cart",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "components/w-swiper/w-swiper"
   ],
   "tabBar": {
     "selectedColor": "#229DDD",
     "list": [
       {
-      "pagePath": "pages/home/home",
-      "text": "首页",
-      "iconPath": "assets/images/tabbar/home.png",
-      "selectedIconPath": "assets/images/tabbar/home_active.png"
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "assets/images/tabbar/home.png",
+        "selectedIconPath": "assets/images/tabbar/home_active.png"
       },
       {
         "pagePath": "pages/category/category",
