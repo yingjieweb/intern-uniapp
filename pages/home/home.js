@@ -4,7 +4,12 @@ import { getMultiData, getProduct } from '../../service/home.js'
 Page({
   data: {
     banners:[],
-    recommends:[]
+    recommends:[],
+    titles: ['流行','新款','精选']
+  },
+  tabClick(){
+    //取出index
+    const index = event.detail.index;
   },
   onLoad: function (options) {
     //请求图片及数据
