@@ -1,8 +1,8 @@
 <!--pages/home/childCpns/w-recommend.wxml-->
 <view class='recommend'>
-  <block wx:for="{{recommends}}" wx:key="{{key}}">
+  <block wx:for="{{recommends}}" wx:key="index">
     <view class='recommend-item'>
-      <image src="{{item.image}}" bindload='onImageLoad'/>
+      <image src="{{item.image}}"/>
       <view><text>{{item.title}}</text></view>
     </view>
   </block>

@@ -21,10 +21,10 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    itemClick(e) {
+    itemClick(event) {
       // 1.设置最新的index
       this.setData({
-        currentIndex: e.currentTarget.dataset.index
+        currentIndex: event.currentTarget.dataset.index
       })
 
       // 2.发出事件
