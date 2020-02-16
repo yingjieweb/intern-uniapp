@@ -22,20 +22,16 @@ Component({
    */
   methods: {
     itemClick(event) {
-      // 1.设置最新的index
-      this.setData({
-        currentIndex: event.currentTarget.dataset.index
-      })
+      // 1.取出index
+      const index = event.currentTarget.dataset.index;
 
-      // 2.发出事件
-      const data = {index: this.data.currentIndex}
-      this.triggerEvent("tabclick", data, {})
-    },
-    setCurrentIndex(index) {
-      console.log(index)
+      // 2.设置最新的index
       this.setData({
         currentIndex: index
       })
+
+      // 3.通知页面内部发生点击事件
+      this.triggerEvent("tabclick",{index,titles:this.properties.titles[index]},{})
     }
   }
 })
