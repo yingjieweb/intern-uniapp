@@ -10,8 +10,8 @@ export function getProduct(type, page) {
   return request({
     url: '/home/data',
     data: {
-      type,
-      page
+      type:type,
+      page:page
     }
   })
 }
