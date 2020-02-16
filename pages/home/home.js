@@ -1,6 +1,9 @@
 // pages/home/home.js
 import { getMultiData, getProduct } from '../../service/home.js'
 
+const types = ['pop','new','sell']  //方便设置currentType
+const BACKTOP_DISTANCE = 1000;
+
 Page({
   data: {
     banners:[],
@@ -11,6 +14,8 @@ Page({
       new: { page: 0, list: [] },
       sell: { page: 0, list: [] },
     },
+    currentType:'pop',
+    showBackTop:false
   },
   onLoad: function (options) {
     //1.请求轮播图和推荐的数据
@@ -23,8 +28,13 @@ Page({
   },
   //---------------------事件监听函数---------------------
   tabClick(event) {
-    //取出index
+    //1. 取出index
     const index = event.detail.index;
+
+    //2.设置currentType
+    this.setData({
+      currentType:types[index]
+    })
   },
   //---------------------网络请求函数---------------------
   _getMultiData(){
@@ -61,5 +71,21 @@ Page({
       })
     })
   }
+  //当页面滚动到底部，做上拉加载更多
+  ,onReachBottom(){
+    this._getProduct(this.data.currentType)
+  },
+  //监听页面滚动，当到一定位置显示backTop
+  onPageScroll(options){
+    //1.取出scrollTop
+    const scrollTop = options.scrollTop;
 
+    //2.修改showBackTop属性
+    //注意：官方表示，不要在滚动函数回调中频繁调用this.setData
+    const flag = scrollTop >= BACKTOP_DISTANCE
+    if(flag != this.data.showBackTop)
+    this.setData({
+      showBackTop:flag
+    })
+  }
 })
