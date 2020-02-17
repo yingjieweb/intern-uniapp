@@ -81,7 +81,7 @@ Page({
     const scrollTop = options.scrollTop;
 
     //2.修改showBackTop属性
-    //注意：官方表示，不要在滚动函数回调中频繁调用this.setData
+    //注意：官方表示，不要在滚动函数回调中频繁调用this.setData()
     const flag = scrollTop >= BACKTOP_DISTANCE
     if(flag != this.data.showBackTop)
     this.setData({
