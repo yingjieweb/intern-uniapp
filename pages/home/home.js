@@ -15,7 +15,8 @@ Page({
       sell: { page: 0, list: [] },
     },
     currentType:'pop',
-    showBackTop:false
+    showBackTop:false,
+    isTabFixed:false
   },
   onLoad: function (options) {
     //1.请求轮播图和推荐的数据
@@ -71,11 +72,11 @@ Page({
       })
     })
   }
-  //当页面滚动到底部，做上拉加载更多
+  //-----------当页面滚动到底部，做上拉加载更多-------------
   ,onReachBottom(){
     this._getProduct(this.data.currentType)
   },
-  //监听页面滚动，当到一定位置显示backTop
+  //-------监听页面滚动，当到一定位置显示backTop------------
   onPageScroll(options){
     //1.取出scrollTop
     const scrollTop = options.scrollTop;
@@ -87,5 +88,13 @@ Page({
     this.setData({
       showBackTop:flag
     })
-  }
+  },
+  //-------获取第一个tab-control距离顶部的距离------------
+  onImageLoad() {
+    wx.createSelectorQuery().select('.tab-control').boundingClientRect((rect) => {
+      this.setData({
+        tabControlTop: rect.top
+      })
+    }).exec()
+  },
 })

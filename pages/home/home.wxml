@@ -9,7 +9,9 @@
 <w-popular/>
 
 <!-- 4.tab-control-->
-<w-tab-control titles="{{titles}}" bind:tabclick="tabClick"/>
+<w-tab-control titles="{{titles}}" bind:tabclick="tabClick" class="{{isTabFixed ? fixed : ''}}" id="tab-control"/>
+<w-tab-control titles="{{titles}}" wx:if="{{isTabFixed}}"/>
+
 
 <!-- 5. 展示商品数据-->
 <w-goods goods="{{goods[currentType].list}}"/>
