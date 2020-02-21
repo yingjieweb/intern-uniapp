@@ -3,7 +3,7 @@
 <w-swiper list="{{banners}}"></w-swiper>
 
 <!-- 2.推荐数据展示-->
-<w-recommend recommends="{{recommends}}"/>
+<w-recommend recommends="{{recommends}}" bind:imageLoad="onImageLoad"/>
 
 <!-- 3.展示本周流行-->
 <w-popular/>
