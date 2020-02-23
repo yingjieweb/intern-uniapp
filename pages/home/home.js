@@ -73,14 +73,11 @@ Page({
       })
     })
   },
-  //-------获取第一个tab-control距离顶部的距离------------
+  //-------获取第一个tab-control距离顶部的距离-------------
   onImageLoad() {
     wx.createSelectorQuery().select('#tab-control').boundingClientRect((rect) => {
-      this.setData({
-        tabControlTop: rect.top
-      })
+      this.data.tabScrollTop = rect.top
     }).exec()
-
   },
   //-----------当页面滚动到底部，做上拉加载更多-------------
   onReachBottom(){
@@ -98,5 +95,13 @@ Page({
     this.setData({
       showBackTop:flag
     })
+
+    //3.修改isTabFixed属性
+    const mark = scrollTop >= this.data.tabScrollTop;
+    if(mark != this.data.isTabFixed){
+      this.setData({
+        isTabFixed:mark
+      })
+    }
   }
 })
