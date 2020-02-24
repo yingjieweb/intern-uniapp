@@ -8,7 +8,7 @@
 <!-- 3.展示本周流行-->
 <w-popular/>
 
-<!-- 4.tab-control-->
+<!-- 4.tab-control、这里有点问题，正好测试一下切换的ssh，稍后更正-->
 <w-tab-control titles="{{titles}}" bind:tabclick="tabClick" class="{{isTabFixed ? fixed : ''}}" id="tab-control"/>
 <w-tab-control titles="{{titles}}" wx:if="{{isTabFixed}}"/>
 
