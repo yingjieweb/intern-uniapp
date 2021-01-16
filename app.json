@@ -1,13 +1,12 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs",
     "pages/history/history",
     "pages/change/change"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#67C23A",
+    "navigationBarBackgroundColor": "#1c1b21",
     "navigationBarTitleText": "小本本翻译",
     "navigationBarTextStyle": "white"
   },
