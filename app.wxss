@@ -1,4 +1,6 @@
 /**app.wxss**/
+@import "./assets/iconfont.wxss";
+
 .container {
   padding: 0;
   background-color:#f5fafe;
@@ -23,3 +25,4 @@
 .view-hover {
   background-color: #f3f3f3!important;
 }
+
