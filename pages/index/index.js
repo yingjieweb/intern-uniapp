@@ -40,5 +40,11 @@ Page({
       history.length = history.length > 10 ? 10 : history.length
       wx.setStorageSync('history', history)
     })
-  }
+  },
+  onShareAppMessage: function () {
+    return {
+      title: '小本本翻译',
+      path: '/page/index/index'
+    }
+  },
 })
