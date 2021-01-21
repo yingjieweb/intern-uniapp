@@ -46,5 +46,5 @@ Page({
       title: '小本本翻译',
       path: '/page/index/index'
     }
-  },
+  }
 })
