@@ -1,4 +1,4 @@
-# time-uniapp
+# timer-uniapp
 
 ## Project setup
 ```
