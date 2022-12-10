@@ -1,19 +1,12 @@
-# timer-uniapp
+## 🕘 Timer-uniapp
 
-## Project setup
-```
-npm install
-```
+### 🎉 Feature plan 
+- Computing hours
+    - Inputting start time and end time manually
+    - Uploading time image for auto recognize
+- Recording work day
+- Setting to-do list
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 🤨 Why do this?
+- I created this project for computing how many hours I had worked in the company conveniently. You may not understand it, but it is necessary for me. You can try to guess the reason, that's funny. 🤐
+- It is a beneficial thing for me, because of developing this project can not only help me to compute my work hours but also improve my development skills. 🤣
