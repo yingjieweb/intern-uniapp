@@ -12,7 +12,7 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
 .index {
 	border: 1rpx solid #000
 }
