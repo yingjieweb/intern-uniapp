@@ -4,6 +4,7 @@
 - Computing hours
     - Inputting start time and end time manually
     - Uploading time image for auto recognize
+    - Using the company's token to get hours directly
 - Recording work day
 - Setting to-do list
 
