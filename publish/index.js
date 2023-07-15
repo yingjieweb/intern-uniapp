@@ -37,7 +37,7 @@ async function buildAndPublish() {
     await exec(`cd ${root}`)
 
     console.log('Start building...')
-    let buildCommand = 'yarn run build:mp-weixin'
+    let buildCommand = 'npm run build:mp-weixin'
     console.log(buildCommand)
     console.log('Please be patient for a few minutes...')
     const { stdout, stderr } = await exec(buildCommand)
@@ -51,7 +51,7 @@ async function buildAndPublish() {
         type: 'miniProgram',
         appid: config.appId,
         projectPath: path.resolve(__dirname, `../dist/build/mp-weixin`),
-        privateKeyPath: path.resolve(__dirname, `./keys/private.${config.appId}.key`),
+        privateKeyPath: path.resolve(__dirname, `./private.${config.appId}.key`),
         ignores: ['node_modules/**/*'],
     })
     const uploadResult = await ci.upload({
@@ -67,8 +67,29 @@ async function buildAndPublish() {
             minify: true,
         }
     })
-    // notifyPackageSize(uploadResult)
-    console.log(uploadResult);
+    console.log('Upload successfully! 🎉')
+    notifyPackageSize(uploadResult)
+}
+
+function notifyPackageSize(uploadResult) {
+  uploadResult.subPackageInfo.map(item => {
+      if (item.name === '__APP__') {
+          console.log(`当前主包的当前体积为 ${(item.size / 1024 / 1024).toFixed(2)}M`)
+      } else if (item.name === '__FULL__') {
+          console.log(`当前所有包的总体积为 ${(item.size / 1024 / 1024).toFixed(2)}M`)
+      } else {
+          console.log(`${item.name.slice(1, -1).split('/')[1]} 分包的当前体积为 ${(item.size / 1024 / 1024).toFixed(2)}M`)
+      }
+
+      if ((item.size / 1024 / 1024).toFixed(2) > 2 && item.name !== '__FULL__') {
+          console.error(`🚨单个分包/主包大小不能超过 2M ⬆️`)
+          console.error(`详细请参考官方文档：https://developers.weixin.qq.com/miniprogram/dev/framework/subpackages.html`)
+      }
+      if ((item.size / 1024 / 1024).toFixed(2) >= 20 && item.name === '__FULL__') {
+          console.error(`🚨整个小程序所有分包大小不超过 20M ⬆️`)
+          console.error(`详细请参考官方文档：https://developers.weixin.qq.com/miniprogram/dev/framework/subpackages.html`)
+      }
+  })
 }
 
 inquirerToSetConfig()
