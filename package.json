@@ -100,6 +100,7 @@
     "postcss-comment": "^2.0.0",
     "sass": "^1.56.2",
     "sass-loader": "^13.2.0",
+    "semver": "^7.5.4",
     "vue-template-compiler": "^2.6.11"
   },
   "browserslist": [
