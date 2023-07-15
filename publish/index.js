@@ -9,15 +9,17 @@ const semver = require("semver");
 
 const config = {
   appId: "wx6f7009e2fd70719a",
-  version: "",
+  miniVersion: "",
   desc: "",
+  currentRepoVersion: "1.0.0",
+  nextRepoVersionOptions: [],
 };
 
 const question1 = [
   {
     type: "input",
-    message: "请输入本次部署的版本号:",
-    name: "version",
+    message: "请输入本次部署的小程序版本号:",
+    name: "miniVersion",
     default: "0.0.0",
   },
 ];
@@ -29,14 +31,60 @@ const question2 = [
     default: "部署体验版",
   },
 ];
+const question3 = [
+  {
+    type: "confirm",
+    message: "本次部署是否更新代码仓版本号?",
+    name: "isBumpRepoVersion",
+    default: false,
+  },
+];
+const question4 = () => ({
+  type: "list",
+  name: "nextRepoVersion",
+  message: `请选择代码仓下一个版本号 (当前版本为 ${config.currentRepoVersion})`,
+  choices: Object.keys(config.nextRepoVersionOptions).map((name) => ({
+    name: `${name} => ${config.nextRepoVersionOptions[name]}`,
+    value: config.nextRepoVersionOptions[name],
+  })),
+});
 
 async function inquirerToSetConfig() {
-  let answer1 = await inquirer.prompt(question1);
+  const answer1 = await inquirer.prompt(question1);
   Object.assign(config, answer1);
-  let answer2 = await inquirer.prompt(question2);
+  const answer2 = await inquirer.prompt(question2);
   Object.assign(config, answer2);
+  const answer3 = await inquirer.prompt(question3);
+  Object.assign(config, answer3);
+
+  if (answer3.isBumpRepoVersion) {
+    config.currentRepoVersion = getCurrentRepoVersion();
+    config.nextRepoVersionOptions = getNextRepoVersionOptions(
+      config.currentRepoVersion
+    );
+    const answer4 = await inquirer.prompt(question4());
+    Object.assign(config, answer4);
+  }
 
   buildAndPublish();
+}
+
+function getCurrentRepoVersion() {
+  const packagePath = path.resolve(root, "package.json");
+  const packageData = fs.readFileSync(packagePath, "utf8");
+  return JSON.parse(packageData).version;
+}
+
+function getNextRepoVersionOptions(currentRepoVersion) {
+  return {
+    major: semver.inc(currentRepoVersion, "major"),
+    minor: semver.inc(currentRepoVersion, "minor"),
+    patch: semver.inc(currentRepoVersion, "patch"),
+    premajor: semver.inc(currentRepoVersion, "premajor"),
+    preminor: semver.inc(currentRepoVersion, "preminor"),
+    prepatch: semver.inc(currentRepoVersion, "prepatch"),
+    prerelease: semver.inc(currentRepoVersion, "prerelease"),
+  };
 }
 
 async function buildAndPublish() {
@@ -62,7 +110,7 @@ async function buildAndPublish() {
   });
   const uploadResult = await ci.upload({
     project,
-    version: config.version,
+    version: config.miniVersion,
     desc: config.desc,
     robot: 1,
     setting: {
@@ -75,7 +123,7 @@ async function buildAndPublish() {
   });
   console.log("Upload successfully! 🎉");
   notifyPackageSize(uploadResult);
-  updateVersion();
+  config.isBumpRepoVersion && updateVersion();
 }
 
 function notifyPackageSize(uploadResult) {
@@ -99,7 +147,7 @@ function notifyPackageSize(uploadResult) {
     }
 
     if ((item.size / 1024 / 1024).toFixed(2) > 2 && item.name !== "__FULL__") {
-      console.error(`🚨单个分包/主包大小不能超过 2M ⬆️`);
+      console.error(`🚨 单个分包/主包大小不能超过 2M ⬆️`);
       console.error(
         `详细请参考官方文档：https://developers.weixin.qq.com/miniprogram/dev/framework/subpackages.html`
       );
@@ -108,7 +156,7 @@ function notifyPackageSize(uploadResult) {
       (item.size / 1024 / 1024).toFixed(2) >= 20 &&
       item.name === "__FULL__"
     ) {
-      console.error(`🚨整个小程序所有分包大小不超过 20M ⬆️`);
+      console.error(`🚨 整个小程序所有分包大小不超过 20M ⬆️`);
       console.error(
         `详细请参考官方文档：https://developers.weixin.qq.com/miniprogram/dev/framework/subpackages.html`
       );
@@ -118,38 +166,14 @@ function notifyPackageSize(uploadResult) {
 
 async function updateVersion() {
   const output = await exec("git status --porcelain");
-  if (output.toString().trim() !== "") {
-    console.log(`🚨 更新版本号需保持工作区清楚状态`);
+  if (output.stdout.toString().trim() !== "") {
+    console.log(`🚨 更新版本号需保持工作区清洁`);
     return;
   }
-  const packagePath = path.resolve(root, "package.json");
-  const packageData = fs.readFileSync(packagePath, "utf8");
-  const packageJson = JSON.parse(packageData);
-  const currentVersion = packageJson.version;
-  const nextVersionOptions = {
-    major: semver.inc(currentVersion, "major"),
-    minor: semver.inc(currentVersion, "minor"),
-    patch: semver.inc(currentVersion, "patch"),
-    premajor: semver.inc(currentVersion, "premajor"),
-    preminor: semver.inc(currentVersion, "preminor"),
-    prepatch: semver.inc(currentVersion, "prepatch"),
-    prerelease: semver.inc(currentVersion, "prerelease"),
-  };
-  const { nextVersion } = await inquirer.prompt([
-    {
-      type: "list",
-      name: "nextVersion",
-      message: `Please select the next version (current version is ${currentVersion})`,
-      choices: Object.keys(nextVersionOptions).map((name) => ({
-        name: `${name} => ${nextVersionOptions[name]}`,
-        value: nextVersionOptions[name],
-      })),
-    },
-  ]);
-  exec(`npm version ${nextVersion}`);
-  console.log("Bump version successfully! 🎉");
+  exec(`npm version ${config.nextRepoVersion} -m "release ${config.nextRepoVersion}"`);
+  console.log("Bump repo version successfully! 🎉");
 }
 
-// inquirerToSetConfig()
+inquirerToSetConfig();
 
-updateVersion();
+// updateVersion();
