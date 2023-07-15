@@ -96,6 +96,7 @@
     "jest": "^25.4.0",
     "mini-types": "*",
     "miniprogram-api-typings": "*",
+    "miniprogram-ci": "^1.9.8",
     "postcss-comment": "^2.0.0",
     "sass": "^1.56.2",
     "sass-loader": "^13.2.0",
