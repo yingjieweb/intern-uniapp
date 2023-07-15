@@ -4,6 +4,8 @@ const exec = util.promisify(require('child_process').exec)
 const path = require('path')
 const root = path.dirname(__dirname)
 const ci = require('miniprogram-ci')
+const fs = require('fs');
+const semver = require('semver')
 
 const config = {
     appId: 'wx6f7009e2fd70719a',
@@ -69,6 +71,7 @@ async function buildAndPublish() {
     })
     console.log('Upload successfully! 🎉')
     notifyPackageSize(uploadResult)
+    updateVersion()
 }
 
 function notifyPackageSize(uploadResult) {
@@ -92,4 +95,40 @@ function notifyPackageSize(uploadResult) {
   })
 }
 
-inquirerToSetConfig()
+async function updateVersion() {
+  const output = await exec('git status --porcelain')
+  if (output.toString().trim() !== '') {
+    console.log(`🚨 更新版本号需保持工作区清楚状态`);
+    return
+  }
+  const packagePath = path.resolve(root, 'package.json');
+  const packageData = fs.readFileSync(packagePath, 'utf8');
+  const packageJson = JSON.parse(packageData);
+  const currentVersion = packageJson.version;
+  const nextVersionOptions = {
+    major: semver.inc(currentVersion, 'major'),
+    minor: semver.inc(currentVersion, 'minor'),
+    patch: semver.inc(currentVersion, 'patch'),
+    premajor: semver.inc(currentVersion, 'premajor'),
+    preminor: semver.inc(currentVersion, 'preminor'),
+    prepatch: semver.inc(currentVersion, 'prepatch'),
+    prerelease: semver.inc(currentVersion, 'prerelease'),
+  }
+  const { nextVersion } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'nextVersion',
+      message: `Please select the next version (current version is ${currentVersion})`,
+      choices: Object.keys(nextVersionOptions).map((name) => ({
+        name: `${name} => ${nextVersionOptions[name]}`,
+        value: nextVersionOptions[name]
+      }))
+    }
+  ]);
+  exec(`npm version ${nextVersion}`)
+  console.log('Bump version successfully! 🎉');
+}
+
+// inquirerToSetConfig()
+
+updateVersion()
